@@ -12,6 +12,8 @@ function rollD6()
 	return Math.floor((Math.random()*6)+1);
 }
 
+var momentum = 12;
+var threat = 7;
 
 // Configure logger settings
 logger.remove(logger.transports.Console);
@@ -37,41 +39,117 @@ bot.on('message', function (user, userID, channelID, message, evt)
 	// It will listen for messages that will start with `!`
 	if (message.substring(0, 1) == '!')
 	{
+		var msg = "";
 		var args = message.substring(1).split(' ');
 		var cmd = args[0];
 		args = args.splice(1);
 		if( cmd.length > 0 )
 		{
-			var numberOf20Sided = cmd.charAt(0);
-			var msg = "{[ ";
-			for( i=0; i<numberOf20Sided; i++ )
+			if( isNaN(cmd.charAt(0)) )
 			{
-				if( i != 0 )
-				msg += ", ";
-				msg += rollD20();
+				if(cmd == "mt" )
+				{
+					msg = momentum+" momentum, "+threat+" threat";
+				}
+				else if( cmd.charAt(0) == "m" )
+				{
+					if( cmd.length == 1 )
+					{
+						msg = momentum+" momentum";
+					}
+					else if( cmd.charAt(1) == "=" )
+					{
+						momentum = Number(cmd.substring(2));
+					}
+					else if( cmd.charAt(1) == "+" )
+					{
+						momentum+= Number(cmd.substring(2));
+					}
+					else if( cmd.charAt(1) == "-" )
+					{
+						momentum-= Number(cmd.substring(2));
+					}
+					msg = momentum+" momentum";
+				}
+				else if( cmd.charAt(0) == "t" )
+				{
+					if( cmd.length == 1 )
+					{
+						msg = threat+" threat";
+					}
+					else if( cmd.charAt(1) == "=" )
+					{
+						threat = Number(cmd.substring(2));
+					}
+					else if( cmd.charAt(1) == "+" )
+					{
+						threat+= Number(cmd.substring(2));
+					}
+					else if( cmd.charAt(1) == "-" )
+					{
+						threat-= Number(cmd.substring(2));
+					}
+					msg = threat+" threat";
+				}
+				else if( cmd.charAt(0) == "c" )
+				{
+					if( cmd.length > 1 )
+					{
+						msg += "[ ";
+						var numberOf6Sided = cmd.substring(1);
+						var damages = 0;
+						var effects = 0;
+						for( i=0; i<numberOf6Sided; i++ )
+						{
+							if( i != 0 )
+							msg += ", ";
+							var d = rollD6();
+							if( d == 1 )
+							{
+								damages++;
+								msg += ":boom:";
+							}
+							else if( d == 2 )
+							{
+								damages+=2;
+								msg += ":boom: :boom:";
+							}
+							else if( d == 3 || d == 4 )
+								msg += ":black_large_square:";
+							else if( d == 5 || d == 6 )
+							{
+								effects++;
+								damages++;
+								msg += ":star:";
+							}
+						}
+						msg += " ]";
+					}
+					msg += "\n";
+					if( damages != undefined && effects != undefined )
+					{
+						damageString = "damages";
+						effectsString = "effects";
+						if( damages < 2 )
+							damageString = "damage";
+						if( effects == 1 )
+							effectsString = "effect";
+						msg += "                               "+damages+" "+damageString+", "+effects+" "+effectsString;
+					}
+				}
 			}
-			msg += " ]";
-			if( cmd.length > 1 )
+			else
 			{
-				msg += ", [ ";
-				var numberOf6Sided = cmd.substring(1);
-				for( i=0; i<numberOf6Sided; i++ )
+				var numberOf20Sided = cmd.charAt(0);
+				msg += "[ ";
+				for( i=0; i<numberOf20Sided; i++ )
 				{
 					if( i != 0 )
 					msg += ", ";
-					var d = rollD6();
-					if( d == 1 )
-								msg += ":boom:";
-					else if( d == 2 )
-								msg += ":boom: :boom:";
-					else if( d == 3 || d == 4 )
-								msg += ":black_large_square:";
-					else if( d == 5 || d == 6 )
-								msg += ":star:";
+					msg += rollD20();
 				}
 				msg += " ]";
 			}
-			msg += "}";
 	    bot.sendMessage({
 				to: channelID,
 				message: msg
