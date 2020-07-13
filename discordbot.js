@@ -60,8 +60,10 @@ bot.on('message', function (user, userID, channelID, message, evt)
 					if( i != 0 )
 					msg += ", ";
 					var d = rollD6();
-					if( d == 1 || d == 2 )
+					if( d == 1 )
 								msg += ":boom:";
+					else if( d == 2 )
+								msg += ":boom: :boom:";
 					else if( d == 3 || d == 4 )
 								msg += ":black_large_square:";
 					else if( d == 5 || d == 6 )
