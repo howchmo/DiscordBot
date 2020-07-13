@@ -1,0 +1,23 @@
+{
+  "name": "discordbot",
+  "version": "1.0.0",
+  "description": "Experiments with writing my own Discord Bot",
+  "main": "server.js",
+  "scripts": {
+    "test": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/howchmo/DiscordBot.git"
+  },
+  "author": "Howard Mall",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/howchmo/DiscordBot/issues"
+  },
+  "homepage": "https://github.com/howchmo/DiscordBot#readme",
+  "dependencies": {
+    "discord.io": "https://github.com/woor/discord.io/tarball/gateway_v6",
+    "winston": "^3.3.3"
+  }
+}
