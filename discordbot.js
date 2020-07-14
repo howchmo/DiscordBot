@@ -12,8 +12,8 @@ function rollD6()
 	return Math.floor((Math.random()*6)+1);
 }
 
-var momentum = 12;
-var threat = 7;
+var momentum = 0;
+var threat = 0;
 
 // Configure logger settings
 logger.remove(logger.transports.Console);
@@ -69,6 +69,8 @@ bot.on('message', function (user, userID, channelID, message, evt)
 					{
 						momentum-= Number(cmd.substring(2));
 					}
+					if( momentum < 0 )
+						momentum = 0;
 					msg = momentum+" momentum";
 				}
 				else if( cmd.charAt(0) == "t" )
@@ -89,6 +91,8 @@ bot.on('message', function (user, userID, channelID, message, evt)
 					{
 						threat-= Number(cmd.substring(2));
 					}
+					if( threat < 0 )
+						threat = 0;
 					msg = threat+" threat";
 				}
 				else if( cmd.charAt(0) == "c" )
@@ -134,7 +138,36 @@ bot.on('message', function (user, userID, channelID, message, evt)
 							damageString = "damage";
 						if( effects == 1 )
 							effectsString = "effect";
-						msg += "                               "+damages+" "+damageString+", "+effects+" "+effectsString;
+						msg += "                               ";
+						msg += damages+" "+damageString+", "+effects+" "+effectsString;
+					}
+				}
+				else if( cmd.charAt(0) == "r" )
+				{
+					if( momentum == 0 )
+					{
+						msg = "```fix\nYou have no momentum to spend!\n```";
+					}
+					else
+					{
+						momentum--;
+						msg += "[ ";
+						if( cmd.length > 1 )
+						{
+							for( i=0; i<Number(cmd.charAt(1)); i++ )
+							{
+								if( i != 0 )
+									msg += ", ";
+								msg += rollD20();
+							}
+						}
+						else
+						{
+							msg += rollD20();
+						}
+						msg += " ]\n";
+						msg += "                               ";
+						msg += momentum+" momentum";
 					}
 				}
 			}
