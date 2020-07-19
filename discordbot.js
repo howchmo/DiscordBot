@@ -1,5 +1,4 @@
-var Discord = require('discord.io');
-var logger = require('winston');
+var Discord = require('discord.js');
 var auth = require('./auth.json');
 
 function rollD20()
@@ -15,34 +14,31 @@ function rollD6()
 var momentum = 0;
 var threat = 0;
 
-// Configure logger settings
-logger.remove(logger.transports.Console);
-logger.add(new logger.transports.Console, {
-	colorize: true
-});
-logger.level = 'info';
-logger.info("Initialize Discord Bot");
-var bot = new Discord.Client({
-   token: auth.token,
-   autorun: true
-});
-logger.info(auth.token);
+const bot = new Discord.Client();
+bot.login(auth.token);
 
-bot.on('ready', function (evt) {
-	logger.info('Connected');
-	logger.info('Logged in as: ');
-	logger.info(bot.username + ' - (' + bot.id + ')');
-});
-bot.on('message', function (user, userID, channelID, message, evt)
+bot.on('ready', function (evt)
 {
+	console.log('Connected');
+	console.log('Logged in as: ');
+	console.log(bot.user.tag + ' - (' + bot.user.id + ')');
+});
+bot.on('message', com => {
+	var nickname = com.member.displayName;
+	var message = com.content;
 	// Our bot needs to know if it will execute a command
 	// It will listen for messages that will start with `!`
 	if (message.substring(0, 1) == '!')
 	{
 		var msg = "";
-		var args = message.substring(1).split(' ');
-		var cmd = args[0];
-		args = args.splice(1);
+		var cmd = "2";
+		var args = "";
+		if( message.length != 1 )
+		{
+			args = message.substring(1).split(' ');
+			cmd = args[0];
+			args = args.splice(1);
+		}
 		if( cmd.length > 0 )
 		{
 			if( isNaN(cmd.charAt(0)) )
@@ -183,10 +179,8 @@ bot.on('message', function (user, userID, channelID, message, evt)
 				}
 				msg += " ]";
 			}
-	    bot.sendMessage({
-				to: channelID,
-				message: msg
-			});
+			msg += "   -   "+nickname;
+	    com.channel.send(msg);
 		}
 	}
 });

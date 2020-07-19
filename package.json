@@ -17,7 +17,6 @@
   },
   "homepage": "https://github.com/howchmo/DiscordBot#readme",
   "dependencies": {
-    "discord.io": "https://github.com/woor/discord.io/tarball/gateway_v6",
-    "winston": "^3.3.3"
+    "discord.js": "^12.2.0"
   }
 }
