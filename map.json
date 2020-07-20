@@ -1,0 +1,18 @@
+{
+	"attributes": {
+		"C":"control",
+		"D":"daring",
+		"F":"fitness",
+		"I":"insight",
+		"P":"presence",
+		"R":"reason"
+	},
+	"disciplines": {
+		"M":"command",
+		"N":"conn",
+		"C":"security",
+		"E":"engineering",
+		"S":"science",
+		"M":"medicine"
+	}
+}

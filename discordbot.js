@@ -1,5 +1,8 @@
 var Discord = require('discord.js');
 var auth = require('./auth.json');
+var characters = require('./characters.json');
+var map = require('./map.json');
+var spacer = "                               ";
 
 function rollD20()
 {
@@ -134,7 +137,7 @@ bot.on('message', com => {
 							damageString = "damage";
 						if( effects == 1 )
 							effectsString = "effect";
-						msg += "                               ";
+						msg += spacer;
 						msg += damages+" "+damageString+", "+effects+" "+effectsString;
 					}
 				}
@@ -162,8 +165,41 @@ bot.on('message', com => {
 							msg += rollD20();
 						}
 						msg += " ]\n";
-						msg += "                               ";
+						msg += spacer;
 						msg += momentum+" momentum";
+					}
+				}
+				else if( "CDFIPR".includes(cmd.charAt(0)) )
+				{
+					var tag = com.member.user.tag;
+					var attrName = map.attributes[cmd.charAt(0)];
+					var attr = characters[tag].attributes[attrName];
+					if( "MNCESM".includes(cmd.charAt(1)) )
+					{
+						var discName = map.disciplines[cmd.charAt(1)];
+						var disc = characters[tag].disciplines[discName];
+						var op = attr+disc;
+						var roll1 = rollD20();
+						var roll2 = rollD20();
+						var successes = 0;
+						if( op >= roll1 )
+							successes++;
+						if( op >= roll2 )
+							successes++;
+						if( roll1 == 1 )
+							successes++;
+						if( roll2 == 1 )
+							successes++;
+						msg += attrName+" + "+discName+" = "+op;
+						msg += "\n";
+						msg += spacer;
+						msg += "[ "+roll1+", "+roll2+" ]";
+						msg += "\n";
+						msg += spacer;
+						if( successes == 1 )
+							msg += successes + " success"; 
+						else
+							msg += successes + " successes"; 
 					}
 				}
 			}
@@ -179,7 +215,6 @@ bot.on('message', com => {
 				}
 				msg += " ]";
 			}
-			msg += "   -   "+nickname;
 	    com.channel.send(msg);
 		}
 	}

@@ -1,0 +1,20 @@
+{
+	"howch#2921":{
+		"attributes":{
+			"control":9,
+			"daring":10,
+			"fitness":8,
+			"insight":7,
+			"presence":11,
+			"reason":12
+		},
+		"disciplines":{
+			"command":1,
+			"conn":2,
+			"security":3,
+			"engineering":4,
+			"science":1,
+			"medicine":5
+		}
+	}
+}
