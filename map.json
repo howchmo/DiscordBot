@@ -8,11 +8,27 @@
 		"R":"reason"
 	},
 	"disciplines": {
-		"M":"command",
+		"O":"command",
 		"N":"conn",
 		"C":"security",
 		"E":"engineering",
 		"S":"science",
 		"M":"medicine"
+	},
+	"systems": {
+		"E":"engines",
+		"T":"structure",
+		"C":"computers",
+		"S":"sensors",
+		"W":"weapons",
+		"M":"comms"
+	},
+	"departments": {
+		"O":"command",
+		"N":"conn",
+		"C":"security",
+		"E":"engineering",
+		"S":"science",
+		"M":"medical"
 	}
 }

@@ -2,6 +2,7 @@ var Discord = require('discord.js');
 var auth = require('./auth.json');
 var characters = require('./characters.json');
 var map = require('./map.json');
+var ships = require('./ships.json');
 var spacer = "                               ";
 
 function rollD20()
@@ -13,6 +14,27 @@ function rollD6()
 {
 	return Math.floor((Math.random()*6)+1);
 }
+
+var attributeLetters = "";
+var disciplineLetters = "";
+var systemLetters = "";
+var departmentLetters = "";
+function extractLettersForTaskRolls()
+{
+	for( var key in map.attributes )
+				attributeLetters += key;
+	for( var key in map.disciplines )
+				disciplineLetters += key;
+	for( var key in map.systems )
+				systemLetters += key;
+	for( var key in map.departments )
+				departmentLetters += key;
+	console.log(attributeLetters);
+	console.log(disciplineLetters);
+	console.log(systemLetters);
+	console.log(departmentLetters);
+}
+extractLettersForTaskRolls();
 
 var momentum = 0;
 var threat = 0;
@@ -169,28 +191,87 @@ bot.on('message', com => {
 						msg += momentum+" momentum";
 					}
 				}
-				else if( "CDFIPR".includes(cmd.charAt(0)) )
+				else if( cmd.charAt(0) == "s" )
+				{
+					msg += "THE SHIP ROLLS\n"+spacer;
+					console.log(cmd.Length);
+					if( cmd.length > 1 )
+					{
+						if( systemLetters.includes(cmd.charAt(1)) )
+						{
+							// var tag = com.member.user.tag;
+							var systemName = map.systems[cmd.charAt(1)];
+							var system = ships["ship"].systems[systemName];
+							if( departmentLetters.includes(cmd.charAt(2)) )
+							{
+								var departmentName = map.departments[cmd.charAt(2)];
+								var department = ships["ship"].departments[departmentName];
+								var op = system+department;
+								var focusString = "";
+								if( cmd.charAt(3) == "f" || cmd.charAt(3) == "F" )
+								{
+									op++;
+									focusString = " + focus (1)";
+								}
+								var roll1 = rollD20();
+								var roll2 = rollD20();
+								var successes = 0;
+								var complications = 0;
+								if( op > roll1 )
+									successes++;
+								if( op > roll2 )
+									successes++;
+								if( roll1 == 1 ) // <= disc )
+									successes++;
+								if( roll2 == 1 ) // <= disc )
+									successes++;
+								msg += systemName+" ("+system+") + "+departmentName+" ("+department+")"+focusString+" = "+op;
+								msg += "\n";
+								msg += spacer;
+								msg += "[ "+roll1+", "+roll2+" ]";
+								msg += "\n";
+								msg += spacer;
+								if( successes == 1 )
+									msg += successes + " success"; 
+								else
+									msg += successes + " successes"; 
+							}
+						}
+					}
+					else
+					{
+						msg += "[ "+rollD20()+" ]";
+					}
+				}
+				else if( attributeLetters.includes(cmd.charAt(0)) )
 				{
 					var tag = com.member.user.tag;
 					var attrName = map.attributes[cmd.charAt(0)];
 					var attr = characters[tag].attributes[attrName];
-					if( "MNCESM".includes(cmd.charAt(1)) )
+					if( disciplineLetters.includes(cmd.charAt(1)) )
 					{
 						var discName = map.disciplines[cmd.charAt(1)];
 						var disc = characters[tag].disciplines[discName];
 						var op = attr+disc;
+						var focusString = "";
+						if( cmd.charAt(2) == "f" || cmd.charAt(2) == "F" )
+						{
+							op++;
+							focusString = " + focus (1)";
+						}
 						var roll1 = rollD20();
 						var roll2 = rollD20();
 						var successes = 0;
-						if( op >= roll1 )
+						var complications = 0;
+						if( op > roll1 )
 							successes++;
-						if( op >= roll2 )
+						if( op > roll2 )
 							successes++;
-						if( roll1 == 1 )
+						if( roll1 == 1 ) // <= disc )
 							successes++;
-						if( roll2 == 1 )
+						if( roll2 == 1 ) // <= disc )
 							successes++;
-						msg += attrName+" + "+discName+" = "+op;
+						msg += attrName+" ("+attr+") + "+discName+"("+disc+")"+focusString+" = "+op;
 						msg += "\n";
 						msg += spacer;
 						msg += "[ "+roll1+", "+roll2+" ]";

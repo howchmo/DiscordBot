@@ -1,0 +1,20 @@
+{
+	"ship":{
+		"systems":{
+			"engines":11,
+			"structure":10,
+			"computers":9,
+			"sensors":10,
+			"weapons":11,
+			"comms":9
+		},
+		"departments":{
+			"command":2,
+			"conn":2,
+			"security":3,
+			"engineering":4,
+			"science":2,
+			"medical":2
+		}
+	}
+}
